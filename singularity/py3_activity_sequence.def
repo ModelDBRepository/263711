@@ -1,0 +1,37 @@
+Bootstrap: docker
+From: nestsim/nest:2.18.0
+
+%labels
+  AUTHOR Sebastian Spreizer <spreizer@web.de>
+
+%post
+  apt-get update && apt-get install -y \
+    python3-pip \
+    git \
+    ffmpeg
+
+  python3 -m pip install --upgrade \
+    GitPython==2.1.11 \
+    ipython \
+    jupyter \
+    matplotlib \
+    noise \
+    numpy \
+    pip \
+    scikit-learn \
+    scipy
+
+  cd /tmp; rm -rf sumatra
+  git clone https://github.com/babsey/sumatra
+  cd sumatra
+  git checkout 20821e8
+  python3 setup.py install
+
+%environment
+  . /opt/nest/bin/nest_vars.sh
+
+%runscript
+  ipython
+
+%apprun notebook
+  jupyter notebook
